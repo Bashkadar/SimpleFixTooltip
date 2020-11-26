@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Fix Tooltip</title>
+    <style>
+        .tooltip {
+            font-family: 'Open Sans',Arial, Helvetica, sans-serif;
+            position:absolute;
+            border:1px solid #e1e2df;
+            background-color: #ffffff;
+            border-radius:3px;
+            padding: 12px;
+            color: #000000;
+            z-index: 100;
+            width: 150px;
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+        }
+        .tooltip::after{
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-right:6px solid #e1e2df;
+            content: '';
+            position: absolute;
+            left:-6px;
+            top: 4px;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li><span class="point">point 1</span></li>
+    <li><span class="point">point 2</span></li>
+    <li><span class="point">point 3</span></li>
+    <li><span class="point">point 4</span></li>
+    <li><span class="point">point 5</span></li>
+    <li><span class="point">point 6</span></li>
+    <li><span class="point">point 7</span></li>
+    <li><span class="point">point 8</span></li>
+    <li><span class="point">point 9</span></li>
+</ul>
+
+<script>
+    let points = document.querySelector('body');
+    let r,tt,tar,t1;
+    points.onmouseover = points.onmouseout = tooltip;
+
+    tt = document.createElement("div");
+    tt.setAttribute('id','tooltip');
+    tt.setAttribute('class','tooltip');
+    document.body.appendChild(tt);
+
+    function tooltip(el) {
+        if (el.target.className === 'point') {
+            if (el.type === 'mouseover') {
+                t1 = setTimeout(function () {
+                    tar = el.target;
+                    tt.innerHTML = 'some text for tooltip';
+                    r = tar.getBoundingClientRect();
+                    tt.style.top = r.top + pageYOffset + 'px';
+                    tt.style.left = r.left + pageXOffset + r.width + 10 + 'px';
+                    tt.style.opacity = '1';
+                    tt.style.transition = 'opacity 200ms';
+                    tar.style.transition = 'color 200ms';
+                    tar.style.color = '#00EBFF';
+                }, 300);
+            }else if (el.type === 'mouseout') {
+                if (t1) clearTimeout(t1);
+                if(tar){
+                    tt.style.opacity = '0';
+                    tt.style.transition = 'opacity 200ms';
+                    tar.style.transition = 'color 200ms';
+                    tar.style.color = 'black';
+                }
+            }
+        }
+
+    }
+</script>
+</body>
+</html>
